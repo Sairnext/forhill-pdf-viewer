@@ -1,4 +1,3 @@
-// useOpenedSections.ts
 import { useMemo } from "react";
 
 export type OptionWithOpen = { value: string; opened: boolean };

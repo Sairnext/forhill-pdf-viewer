@@ -32,3 +32,8 @@ Each section will be displayed as a menu section on a second step.
 ## Supported formats
 
 Currently we parse only PDF files. One file per upload for showcase.
+
+
+## Important 
+Without setting up correct ```mock.json``` nothing will be highlighted on a second step
+since we don't parse PDF. 

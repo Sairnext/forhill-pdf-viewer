@@ -14,10 +14,9 @@ export const DropArea = ({ onFiles, disabled }: MinimalDropzoneProps) => {
     (filesLike: FileList | File[]) => {
       if (!onFiles) return;
       const files = Array.from(filesLike || []);
-      // keep only PDFs, then choose ONE (last wins if multiple provided)
       const accepted = files.filter((f) => ALLOWED_MIME.has(f.type));
-      const chosen = accepted.at(-1); // use .at(0) if you prefer "first wins"
-      if (chosen) onFiles([chosen]); // always send a single file
+      const chosen = accepted.at(-1);
+      if (chosen) onFiles([chosen]);
     },
     [onFiles],
   );
@@ -61,8 +60,8 @@ export const DropArea = ({ onFiles, disabled }: MinimalDropzoneProps) => {
   const onInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (disabled) return;
     if (e.target.files?.length) {
-      handleFiles(e.target.files); // will pick just one
-      e.target.value = ""; // allow re-selecting the same file
+      handleFiles(e.target.files);
+      e.target.value = "";
     }
   };
 

@@ -18,8 +18,6 @@ export const HomeLayout = () => {
 
   const file = files && files?.length ? files[0] : null;
 
-  console.log("query :: ", query);
-
   return (
     <>
       <LayoutFlex justify="center">
