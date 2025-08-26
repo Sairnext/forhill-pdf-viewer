@@ -11,18 +11,12 @@ import {
   AsideThumbnailButton,
 } from "./styled.tsx";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url,
-).toString();
-
 type Props = {
   file: File;
   height?: number | string;
   minPageWidth?: number;
   maxPageWidth?: number;
   thumbWidthPx?: number;
-  /** Single term or multiple terms to highlight (case-insensitive). */
   query?: string | string[];
 };
 
@@ -53,7 +47,6 @@ export function PdfPreview({
     return () => ro.disconnect();
   }, []);
 
-  // --- active page by intersection ---
   useEffect(() => {
     const root = containerRef.current;
     if (!root || numPages === 0) return;
@@ -139,7 +132,9 @@ export function PdfPreview({
       first.setAttribute("tabindex", "-1");
       try {
         first.focus({ preventScroll: true });
-      } catch {}
+      } catch {
+        console.warn("Unable to scroll to a specified section");
+      }
     }, 50);
 
     return () => window.clearTimeout(id);
