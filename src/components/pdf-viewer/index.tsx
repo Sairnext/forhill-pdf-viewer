@@ -93,7 +93,6 @@ export function PdfPreview({
     container.scrollTo({ top, behavior: "smooth" });
   };
 
-  // --- multi-term highlight helpers ---
   const terms = useMemo(() => {
     const arr = Array.isArray(query) ? query : query ? [query] : [];
     return arr.map((s) => s.trim()).filter(Boolean);
@@ -102,7 +101,7 @@ export function PdfPreview({
   const highlightRe = useMemo(() => {
     if (!terms.length) return null;
     const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    // Longer first to prefer "change order" over "change"
+
     const parts = terms.map(escape).sort((a, b) => b.length - a.length);
     return new RegExp(`(${parts.join("|")})`, "gi");
   }, [terms]);
@@ -171,15 +170,14 @@ export function PdfPreview({
           pageRefs.current = Array(numPages).fill(null);
         }}
         onLoadError={(e) => console.error("PDF load error:", e)}
-        loading={<div className="p-4 text-sm text-gray-500">Loading PDF…</div>}
+        loading={<div>Loading PDF…</div>}
       >
         <DocumentSectionWrapper>
           <div
             ref={containerRef}
-            className="flex-1 overflow-auto rounded border bg-white"
             style={{ minWidth: minPageWidth, height, overflow: "scroll" }}
           >
-            <div className="flex flex-col items-center gap-6 p-4">
+            <div>
               {Array.from({ length: numPages }, (_, i) => {
                 const pageNumber = i + 1;
                 return (

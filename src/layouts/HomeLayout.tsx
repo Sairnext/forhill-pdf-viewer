@@ -9,15 +9,12 @@ import { SearchSection } from "../components/search-section";
 
 import { Button, LayoutFlex } from "./styled/components.tsx";
 
-enum Mode {
-  Upload,
-  Review,
-}
+type Mode = "Upload" | "Review";
 
 export const HomeLayout = () => {
   const [files, setFiles] = useState<File[]>();
   const [query, setQuery] = useState<string | string[]>("");
-  const [mode, setMode] = useState<Mode>(Mode.Upload);
+  const [mode, setMode] = useState<Mode>("Upload");
 
   const file = files && files?.length ? files[0] : null;
 
@@ -26,14 +23,14 @@ export const HomeLayout = () => {
   return (
     <>
       <LayoutFlex justify="center">
-        {mode === Mode.Upload && (
+        {mode === "Upload" && (
           <Flex direction="column">
             <UploadFiles onGetFiles={setFiles} />
             {file && <InfoViewer file={file} />}
             {file && (
               <Button
                 onClick={() => {
-                  setMode(Mode.Review);
+                  setMode("Review");
                 }}
               >
                 Proceed
@@ -41,7 +38,7 @@ export const HomeLayout = () => {
             )}
           </Flex>
         )}
-        {mode === Mode.Review && (
+        {mode === "Review" && (
           <Flex direction="column">
             <SearchSection setQuery={setQuery} />
           </Flex>
