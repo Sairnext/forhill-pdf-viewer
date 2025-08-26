@@ -1,0 +1,35 @@
+{
+  "sections": [
+    {
+      "sectionName": "Insurance",
+      "options": [
+        "Insurance clause 1",
+        "Insurance clause 2"
+      ]
+    },
+    {
+      "sectionName": "Change Orders",
+      "options": [
+        "Change order 1",
+        "Change order 2",
+        "Change order 3"
+      ]
+    },
+    {
+      "sectionName": "Other Additional Clause",
+      "options": [
+        "Clause 1",
+        "Clause 2",
+        "Clause 3"
+      ]
+    },
+    {
+      "sectionName": "Bitcoin",
+      "options": [
+        "Mastering Bitcoin",
+        "The Bitcoin Client",
+        "Alternative Chains"
+      ]
+    }
+  ]
+}
