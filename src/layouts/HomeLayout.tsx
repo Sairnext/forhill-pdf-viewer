@@ -6,6 +6,7 @@ import { UploadFiles } from "../components/upload";
 import { PdfPreview } from "../components/pdf-viewer";
 import { InfoViewer } from "../components/info-viewer";
 import { SearchSection } from "../components/search-section";
+import { FileNavigationBar } from "../components/file-navigation-bar";
 
 import { Button, LayoutFlex } from "./styled/components.tsx";
 
@@ -15,8 +16,23 @@ export const HomeLayout = () => {
   const [files, setFiles] = useState<File[]>();
   const [query, setQuery] = useState<string | string[]>("");
   const [mode, setMode] = useState<Mode>("Upload");
+  const [currentFileIndex, setCurrentFileIndex] = useState(0);
 
-  const file = files && files?.length ? files[0] : null;
+  const handleChangeCurrentFile = (direction: number) => {
+    if (direction === -1) {
+      setCurrentFileIndex(
+        direction + currentFileIndex < 0 ? 0 : direction + currentFileIndex,
+      );
+    } else if (files?.length) {
+      setCurrentFileIndex(
+        direction + currentFileIndex >= files?.length
+          ? files.length - 1
+          : direction + currentFileIndex,
+      );
+    }
+  };
+
+  const file = files && files?.length ? files[currentFileIndex] : null;
 
   return (
     <>
@@ -42,7 +58,16 @@ export const HomeLayout = () => {
           </Flex>
         )}
 
-        {file && <PdfPreview file={file} query={query} />}
+        {}
+
+        {file && (
+          <Flex direction="column" gap="4px">
+            {files && files?.length > 1 && (
+              <FileNavigationBar handleNavigation={handleChangeCurrentFile} />
+            )}
+            <PdfPreview file={file} query={query} />
+          </Flex>
+        )}
       </LayoutFlex>
     </>
   );

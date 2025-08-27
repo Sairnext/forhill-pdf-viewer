@@ -15,8 +15,8 @@ export const DropArea = ({ onFiles, disabled }: MinimalDropzoneProps) => {
       if (!onFiles) return;
       const files = Array.from(filesLike || []);
       const accepted = files.filter((f) => ALLOWED_MIME.has(f.type));
-      const chosen = accepted.at(-1);
-      if (chosen) onFiles([chosen]);
+
+      onFiles(accepted);
     },
     [onFiles],
   );
@@ -89,6 +89,7 @@ export const DropArea = ({ onFiles, disabled }: MinimalDropzoneProps) => {
         aria-hidden="true"
         tabIndex={-1}
         disabled={disabled}
+        multiple
       />
 
       <Flex

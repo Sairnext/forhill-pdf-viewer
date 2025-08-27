@@ -21,8 +21,7 @@ export const UploadFiles: React.FC<Props> = ({ onGetFiles }) => {
   }, [files]);
 
   const handleFiles = useCallback((arr: File[]) => {
-    const one = arr[0] ?? null;
-    setFiles(one ? [one] : []);
+    setFiles(arr);
   }, []);
 
   return (

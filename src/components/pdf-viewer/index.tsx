@@ -66,11 +66,12 @@ export function PdfPreview({
   );
 
   useEffect(() => {
-    if (!terms.length) return;
     const container = containerRef.current;
-    if (!container) return;
+    const topOffset = 40;
 
-    const id = window.setTimeout(() => {
+    if (!terms.length || !container) return;
+
+    const id = setTimeout(() => {
       const first = container.querySelector<HTMLElement>(".pdf-hit");
       if (!first) return;
 
@@ -82,7 +83,10 @@ export function PdfPreview({
 
       const firstTop = first.getBoundingClientRect().top;
       const contTop = container.getBoundingClientRect().top;
-      container.scrollBy({ top: firstTop - contTop - 40, behavior: "smooth" });
+      container.scrollBy({
+        top: firstTop - contTop - topOffset,
+        behavior: "smooth",
+      });
 
       first.setAttribute("tabindex", "-1");
       try {
@@ -96,8 +100,9 @@ export function PdfPreview({
   }, [terms, numPages]);
 
   return (
-    <FileWrapper style={{ height }}>
-      <style>{`
+    <>
+      <FileWrapper style={{ height }}>
+        <style>{`
         .pdf-hit {
           all: unset;
           display: inline;
@@ -112,77 +117,77 @@ export function PdfPreview({
           box-shadow: inset 0 0 0 0.75px rgba(245, 158, 11, 0.6);
         }
       `}</style>
+        <Document
+          file={file}
+          onLoadSuccess={({ numPages }) => {
+            setNumPages(numPages);
+            pageRefs.current = Array(numPages).fill(null);
+          }}
+          onLoadError={(e) => console.error("PDF load error:", e)}
+          loading={<div>Loading PDF…</div>}
+        >
+          <DocumentSectionWrapper>
+            <div
+              ref={containerRef}
+              style={{ minWidth: minPageWidth, height, overflow: "scroll" }}
+            >
+              <div>
+                {Array.from({ length: numPages }, (_, i) => {
+                  const pageNumber = i + 1;
+                  return (
+                    <div
+                      key={pageNumber}
+                      ref={(el) => {
+                        pageRefs.current[i] = el;
+                      }}
+                      data-page-index={i}
+                    >
+                      <Page
+                        pageNumber={pageNumber}
+                        width={560}
+                        renderAnnotationLayer={false}
+                        renderTextLayer
+                        customTextRenderer={customTextRenderer}
+                        loading={<div>Loading</div>}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-      <Document
-        file={file}
-        onLoadSuccess={({ numPages }) => {
-          setNumPages(numPages);
-          pageRefs.current = Array(numPages).fill(null);
-        }}
-        onLoadError={(e) => console.error("PDF load error:", e)}
-        loading={<div>Loading PDF…</div>}
-      >
-        <DocumentSectionWrapper>
-          <div
-            ref={containerRef}
-            style={{ minWidth: minPageWidth, height, overflow: "scroll" }}
-          >
-            <div>
+            <AsideThumbnailMenu>
               {Array.from({ length: numPages }, (_, i) => {
                 const pageNumber = i + 1;
                 return (
-                  <div
+                  <AsideThumbnailButton
                     key={pageNumber}
-                    ref={(el) => {
-                      pageRefs.current[i] = el;
-                    }}
-                    data-page-index={i}
+                    type="button"
+                    onClick={() => scrollToPage(i)}
+                    title={`Page ${pageNumber}`}
+                    data-active={activePage === pageNumber || undefined}
                   >
                     <Page
                       pageNumber={pageNumber}
-                      width={560}
+                      width={thumbWidthPx}
                       renderAnnotationLayer={false}
-                      renderTextLayer
-                      customTextRenderer={customTextRenderer}
-                      loading={<div>Loading</div>}
+                      renderTextLayer={false}
+                      loading={
+                        <div
+                          style={{
+                            width: thumbWidthPx,
+                            height: Math.round(thumbWidthPx * 1.33),
+                          }}
+                        />
+                      }
                     />
-                  </div>
+                  </AsideThumbnailButton>
                 );
               })}
-            </div>
-          </div>
-
-          <AsideThumbnailMenu>
-            {Array.from({ length: numPages }, (_, i) => {
-              const pageNumber = i + 1;
-              return (
-                <AsideThumbnailButton
-                  key={pageNumber}
-                  type="button"
-                  onClick={() => scrollToPage(i)}
-                  title={`Page ${pageNumber}`}
-                  data-active={activePage === pageNumber || undefined}
-                >
-                  <Page
-                    pageNumber={pageNumber}
-                    width={thumbWidthPx}
-                    renderAnnotationLayer={false}
-                    renderTextLayer={false}
-                    loading={
-                      <div
-                        style={{
-                          width: thumbWidthPx,
-                          height: Math.round(thumbWidthPx * 1.33),
-                        }}
-                      />
-                    }
-                  />
-                </AsideThumbnailButton>
-              );
-            })}
-          </AsideThumbnailMenu>
-        </DocumentSectionWrapper>
-      </Document>
-    </FileWrapper>
+            </AsideThumbnailMenu>
+          </DocumentSectionWrapper>
+        </Document>
+      </FileWrapper>
+    </>
   );
 }
