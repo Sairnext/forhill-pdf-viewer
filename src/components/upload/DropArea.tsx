@@ -84,7 +84,6 @@ export const DropArea = ({ onFiles, disabled }: MinimalDropzoneProps) => {
         ref={inputRef}
         type="file"
         accept="application/pdf"
-        // ⬇️ no 'multiple' — picker enforces single selection
         onChange={onInputChange}
         style={{ display: "none" }}
         aria-hidden="true"

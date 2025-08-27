@@ -28,7 +28,7 @@ function isTextItem(it: unknown) {
 
 function normalizeWhitespace(s: string) {
   return s
-    .replace(/\u00A0/g, " ") // nbsp -> space
+    .replace(/\u00A0/g, " ")
     .replace(/[ \t]+\n/g, "\n")
     .replace(/[ \t]{2,}/g, " ")
     .trim();
@@ -55,6 +55,6 @@ export async function getPdfBasicInfo(file: File): Promise<PdfBasicInfo> {
     numPages: pdf.numPages,
   };
 
-  await pdf.destroy(); // free resources
+  await pdf.destroy();
   return info;
 }

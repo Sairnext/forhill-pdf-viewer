@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+import { Document, Page } from "react-pdf";
 
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -35,7 +35,6 @@ export function PdfPreview({
   const [containerWidth, setContainerWidth] = useState<number>(0);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // --- sizing ---
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;

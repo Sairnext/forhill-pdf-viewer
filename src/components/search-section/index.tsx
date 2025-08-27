@@ -46,7 +46,7 @@ export const SearchSection: React.FC<Props> = ({ setQuery }) => {
     }
   };
 
-  const infoPromise = useMemo(() => analyzePDF(), []); // add deps (e.g., [file]) if needed
+  const infoPromise = useMemo(() => analyzePDF(), []);
   const data = usePromiseOrNull<ClausesDocument>(infoPromise);
 
   const openedSections = useOpenedSections(data, filterQuery);
