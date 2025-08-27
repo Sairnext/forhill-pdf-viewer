@@ -24,7 +24,6 @@ export function PdfPreview({
   file,
   height = "80vh",
   minPageWidth = 560,
-  maxPageWidth = 1200,
   thumbWidthPx = 120,
   query,
 }: Props) {
@@ -32,50 +31,7 @@ export function PdfPreview({
   const [activePage, setActivePage] = useState(1);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [containerWidth, setContainerWidth] = useState<number>(0);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(([entry]) => {
-      const w = Math.floor(entry.contentRect.width);
-      if (w) setContainerWidth(w);
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const root = containerRef.current;
-    if (!root || numPages === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let best = entries[0];
-        for (const e of entries) {
-          if (e.intersectionRatio > (best?.intersectionRatio ?? 0)) best = e;
-        }
-        if (best?.target) {
-          const idx = Number((best.target as HTMLElement).dataset.pageIndex);
-          if (!Number.isNaN(idx)) setActivePage(idx + 1);
-        }
-      },
-      { root, threshold: [0.1, 0.25, 0.5, 0.75, 1] },
-    );
-
-    pageRefs.current
-      .slice(0, numPages)
-      .forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
-  }, [numPages]);
-
-  const horizontalPadding = 32;
-  const fittedWidth = Math.min(
-    Math.max(containerWidth - horizontalPadding * 2, 320),
-    maxPageWidth,
-  );
-  const pageWidth = Math.max(fittedWidth, minPageWidth);
 
   const scrollToPage = (pageIndex: number) => {
     const container = containerRef.current;
@@ -137,7 +93,7 @@ export function PdfPreview({
     }, 50);
 
     return () => window.clearTimeout(id);
-  }, [terms, numPages, pageWidth]);
+  }, [terms, numPages]);
 
   return (
     <FileWrapper style={{ height }}>
@@ -184,13 +140,11 @@ export function PdfPreview({
                   >
                     <Page
                       pageNumber={pageNumber}
-                      width={pageWidth}
+                      width={560}
                       renderAnnotationLayer={false}
                       renderTextLayer
                       customTextRenderer={customTextRenderer}
-                      loading={
-                        <div style={{ height: Math.round(pageWidth * 1.33) }} />
-                      }
+                      loading={<div>Loading</div>}
                     />
                   </div>
                 );
